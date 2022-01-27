@@ -23,6 +23,11 @@ from tqdm import tqdm
 import importlib.util
 
 
+def _reduced_shape(shape, axis):
+  if axis is None:
+    return tf.TensorShape([])
+  return tf.TensorShape([d for i, d in enumerate(shape) if i not in axis])
+        
 def organism_path(organism):
     return os.path.join('gs://basenji_barnyard/data', organism)
 
@@ -318,7 +323,8 @@ class MetricDict:
     def result(self):
         return {k: metric.result() for k, metric in self._metrics.items()}
         
-        
+
+
         
         
         
