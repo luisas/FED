@@ -1,0 +1,13 @@
+tensorflow
+tensorflow_hub
+joblib
+kipoiseq
+kipoiseq
+pyfaidx
+statistics
+pandas
+numpy
+matplotlib
+tqdm
+typing
+sonnet
