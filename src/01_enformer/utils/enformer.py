@@ -28,7 +28,8 @@ Pushmeet Kohli1, David R. Kelley2*
 """
 import inspect
 from typing import Any, Callable, Dict, Optional, Text, Union, Iterable
-
+import importlib
+import os
 import attention_module
 import numpy as np
 import sonnet as snt
