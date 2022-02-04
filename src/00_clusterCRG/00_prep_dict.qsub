@@ -6,13 +6,13 @@
 #$ -m abe
 #$ -o ./out/$JOB_NAME-$JOB_ID.out
 #$ -e ./err/$JOB_NAME-$JOB_ID.err
-#$ -l virtual_free=30G,disk=300G
+#$ -l virtual_free=60G,disk=300G
 
 module use /software/as/el7.2/EasyBuild/CRG/modules/all
 module load Singularity/3.7.0
 module load Python
 
 CONTAINER='/users/cn/lsantus/containers/singularity/tfcpu.sif'
-SCRIPT='/users/cn/lsantus/projects/FED/src/01_enformer/01b_create_197k_dataset_test.py'
+SCRIPT='/users/cn/lsantus/projects/FED/src/01_enformer/scripts/00_prep_dict.py'
 
 singularity exec ${CONTAINER} python3 ${SCRIPT}

@@ -57,7 +57,6 @@ transformer_block(tf.ones((2, 1024, 96*8)), is_training=True)
 ```
 """
 from typing import Any, Dict, List, Optional
-
 import numpy as np
 import sonnet as snt
 import tensorflow as tf

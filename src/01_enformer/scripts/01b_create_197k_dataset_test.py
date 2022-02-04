@@ -55,7 +55,7 @@ print("human dataset loaded")
 ## Create new dataset
 dataset_197k = []
 NEW_SEQUENCE_LENGTH = 196608
-max_steps = float('inf')
+max_steps = 200
 
 print("iteration running")
 print(max_steps)
@@ -92,7 +92,7 @@ for i, batch in tqdm(enumerate(human_dataset)):
 # -----------------      Save     ----------------------
 # ------------------------------------------------------
 
-file = os.path.join(outputdir,'test_197k_valid.h5')
+file = os.path.join(outputdir,'test_197k_200.h5')
 with open(file, 'wb') as config_dictionary_file:
     pickle.dump(dataset_197k, config_dictionary_file)
 print("Saved")

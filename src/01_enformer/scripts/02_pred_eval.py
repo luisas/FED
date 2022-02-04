@@ -20,6 +20,7 @@ import copy
 # ------------------------------------------------------
 # -----------------      Load files      ------------
 # ------------------------------------------------------
+
 # import utils.py as module
 file_path = os.path.dirname(os.path.realpath(__file__))
 spec_utils = importlib.util.spec_from_file_location("utils", os.path.join(file_path ,"utils/utils_full.py"))
@@ -28,6 +29,9 @@ spec_utils.loader.exec_module(utils)
 from utils import *
 from utils.utils import *
 
+
+
+
 # Load files
 model_path = 'https://tfhub.dev/deepmind/enformer/1'
 datadir = "../../../../data/FED"
@@ -35,15 +39,15 @@ outputdir = os.path.join(datadir, "hd5")
 fasta_file = os.path.join(datadir, "hg38.fa")
 human_sequences = os.path.join(datadir, "data_human_sequences.bed")
 pyfaidx.Faidx(fasta_file)
-
+logfile = os.path.join(outputdir, "log_full.txt")
 # Get pre-trained model
 model = utils.Enformer(model_path)
 
+print("Model loaded")
 
 spec_utils = importlib.util.spec_from_file_location("attention_module", os.path.join(file_path ,"utils/attention_module.py"))
 attention_module = importlib.util.module_from_spec(spec_utils)
 spec_utils.loader.exec_module(attention_module)
-from attention_module import *
 from utils.attention_module import *
 
 
@@ -51,7 +55,6 @@ from utils.attention_module import *
 spec_utils = importlib.util.spec_from_file_location("enformer", os.path.join(file_path ,"utils/enformer.py"))
 enformer = importlib.util.module_from_spec(spec_utils)
 spec_utils.loader.exec_module(enformer)
-from enformer import *
 from utils.enformer import *
 
 
@@ -59,13 +62,13 @@ from utils.enformer import *
 # -----------------      Extract fasta      ------------
 # ------------------------------------------------------
 fasta_extractor = utils.FastaStringExtractor(fasta_file)
-
+print("fasta file extracted")
 
 # Load previous validation dictionary
-dataset_197k_file = os.path.join(outputdir,'test_197k_valid.h5')
+dataset_197k_file = os.path.join(outputdir,'test_197k_200.h5')
 with open(dataset_197k_file, 'rb') as config_dictionary_file:
     dataset_197k = pickle.load(config_dictionary_file)
-dataset_197k_evaluation = copy.deepcopy(dataset_197k)
+
 
 
 SEQUENCE_LENGHT = 393_216
@@ -78,11 +81,13 @@ def pad_one_hot(sequence_one_hot, NEW_SIZE):
     return(pad_sequence)
 
 
-max_steps = float("inf")
+dataset_197k_evaluation = []
 
 def evaluate_model_all_sequences_mod(model, dataset, head, dataset_197k_evaluation, max_steps=None):
 
     metric = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
+    with open(logfile, "a") as file_object:
+        file_object.write("beginning")
 
     # Given a tensor with a one-encoded sequence, predicts head tracks
     def predict(x):
@@ -96,32 +101,55 @@ def evaluate_model_all_sequences_mod(model, dataset, head, dataset_197k_evaluati
 
         batch = dataset_197k[i]
         prediction = predict(batch['sequence'])
-        metric.update_state(batch['target'], prediction)
+        metric.update_state(batch['target'][np.newaxis], prediction)
         # Compute it on a sequence basis
+        with open(logfile, "a") as file_object:
+            file_object.write("Done with prediction")
+            file_object.write("\n")
+
         metric_seq = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
-        metric_seq.update_state(batch['target'], prediction)
-        dataset_197k_evaluation[i]["PearsonR"] = metric.result()["PearsonR"].numpy()
+        metric_seq.update_state(batch['target'][np.newaxis], prediction)
+        pearson_seq = metric_seq.result()["PearsonR"].numpy()
+        batch_validation = {"sequence": batch["sequence"],
+                            "target": batch["target"],
+                            "interval": batch["interval"],
+                            "PearsonR": pearson_seq}
+        dataset_197k_evaluation.append(batch_validation)
+
+        with open(logfile, "a") as file_object:
+            file_object.write("finished")
+            file_object.write(str(i))
+            file_object.write("\n")
+            file_object.write("-------------")
+            file_object.write("\n")
+
     return list([metric.result(), dataset_197k_evaluation])
 
-
+max_steps = 50
 metrics_human = evaluate_model_all_sequences_mod(model,
                                dataset=dataset_197k,
                                head='human',
                                dataset_197k_evaluation = dataset_197k_evaluation,
-                               max_steps=float("inf"))
+                               max_steps=max_steps)
 
 summarized_metrics = metrics_human[0]
 dataset_197k_evaluation = metrics_human[1]
+
+
+
+file_summarized_metrics = os.path.join(outputdir,'checks.h5')
+with open(file_summarized_metrics, 'wb') as config_dictionary_file:
+    pickle.dump("aaa", config_dictionary_file)
 
 # ------------------------------------------------------
 # -----------------     Save                ------------
 # ------------------------------------------------------
 
-file_summarized_metrics = os.path.join(outputdir,'summarized_metrics.h5')
+file_summarized_metrics = os.path.join(outputdir,'summarized_metrics_50.h5')
 with open(file_summarized_metrics, 'wb') as config_dictionary_file:
     pickle.dump(summarized_metrics, config_dictionary_file)
 
-file_dataset_197k_evaluation = os.path.join(outputdir,'dataset_197k_evaluation.h5')
+file_dataset_197k_evaluation = os.path.join(outputdir,'dataset_197k_evaluation_50.h5')
 with open(file_dataset_197k_evaluation, 'wb') as config_dictionary_file:
     pickle.dump(dataset_197k_evaluation, config_dictionary_file)
 
@@ -150,12 +178,14 @@ def get_sequence_evaluation_df(i,dataset_197k_evaluation, ordered_assays ):
 
 
 final_df = pd.DataFrame()
-for i in range(len(dataset_197k_evaluation)):
+r = len(dataset_197k_evaluation)
+r = max_steps
+for i in range(r):
     df = get_sequence_evaluation_df(i,dataset_197k_evaluation, ordered_assays)
     print(i)
     final_df = pd.concat([final_df, df])
 
 
-file_df = os.path.join(outputdir,'evaluation_df.h5')
+file_df = os.path.join(outputdir,'evaluation_df_50.h5')
 with open(file_df, 'wb') as config_dictionary_file:
     pickle.dump(final_df, config_dictionary_file)

@@ -30,7 +30,16 @@ import inspect
 from typing import Any, Callable, Dict, Optional, Text, Union, Iterable
 import importlib
 import os
-import attention_module
+
+file_path = os.path.dirname(os.path.realpath(__file__))
+print(file_path)
+spec_utils = importlib.util.spec_from_file_location("attention_module", os.path.join(file_path ,"attention_module.py"))
+print(spec_utils)
+attention_module = importlib.util.module_from_spec(spec_utils)
+print(attention_module)
+spec_utils.loader.exec_module(attention_module)
+from utils.attention_module import *
+
 import numpy as np
 import sonnet as snt
 import tensorflow as tf
