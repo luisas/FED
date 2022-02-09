@@ -15,4 +15,4 @@ module load Python
 CONTAINER='/users/cn/lsantus/containers/singularity/tfcpu.sif'
 SCRIPT='/users/cn/lsantus/projects/FED/src/01_enformer/scripts/00_prep_dict.py'
 
-singularity exec ${CONTAINER} python3 ${SCRIPT}
+singularity exec ${CONTAINER} python3 ${SCRIPT} 

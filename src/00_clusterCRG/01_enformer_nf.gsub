@@ -1,14 +1,19 @@
 #!/bin/bash
-#$ -N prep_dataset_197k
+#$ -N enformer_pred_197k
 #$ -cwd
-#$ -q cn-el7
-#$ -M luisa.santus@crg.eu
-#$ -m abe
+#$ -q short-sl7
 #$ -o ./out/$JOB_NAME-$JOB_ID.out
 #$ -e ./err/$JOB_NAME-$JOB_ID.err
-#$ -l virtual_free=20G,disk=300G
+#$ -l virtual_free=15G
 
 
 SCRIPT='/users/cn/lsantus/projects/FED/src/01_enformer/main.nf'
 CONFIG='/users/cn/lsantus/projects/FED/configs/enformer.config'
-nextflow run ${SCRIPT} -c ${CONFIG}
+
+nextflow -bg -c ${CONFIG} run ${SCRIPT} --head_train "human" --head_pred "human" --eval "eval"
+
+nextflow -bg run ${SCRIPT} -c ${CONFIG} --head_train "mouse"  --head_pred "mouse" --eval "eval"
+
+nextflow -bg run ${SCRIPT} -c ${CONFIG} --head_train "human" --head_pred "mouse" --eval "false"
+
+nextflow -bg run ${SCRIPT} -c ${CONFIG} --head_train "mouse" --head_pred "human" --eval "false"

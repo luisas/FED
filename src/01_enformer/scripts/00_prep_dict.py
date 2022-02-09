@@ -3,6 +3,8 @@ import kipoiseq
 from kipoiseq import Interval
 import pyfaidx
 import numpy as np
+import os
+import pickle
 
 mouse_sequences = "/home/luisasantus/Desktop/crg_cluster/data/FED/basenji/mouse/mouse_sequences.bed"
 fasta_file = "/home/luisasantus/Desktop/crg_cluster/data/FED/hg38.fa"
@@ -10,7 +12,7 @@ fasta_file = "/home/luisasantus/Desktop/crg_cluster/data/FED/hg38.fa"
 
 
 mouse_sequences = "/users/cn/lsantus/data/FED/basenji/mouse/mouse_sequences.bed"
-fasta_file = "/users/cn/lsantus/data/FED/hg38.fa"
+fasta_file = "/users/cn/lsantus/data/FED/assemblies/mouse/mm10.fa"
 logfile = "/users/cn/lsantus/data/FED/basenji/mouse/log.txt"
 
 df = pd.read_csv(mouse_sequences, memory_map=True, header=None, index_col=False, delimiter="\t")
@@ -83,8 +85,9 @@ for interval in interval_list:
     sequence = one_hot_encode(fasta_extractor.extract(interval))
     mouse_validation_dict[interval] = sequence
 
+
 print("Intervaldir done")
-outputdir = "/home/luisasantus/Desktop/crg_cluster/data/FED/basenji/mouse"
+outputdir = "/users/cn/lsantus/data/FED/basenji/mouse"
 
 enformer_dict_file = os.path.join(outputdir,'00_enformer_dict_seqs_mouse.h5')
 # Step 2

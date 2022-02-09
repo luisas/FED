@@ -10,6 +10,7 @@ process create_197K_dataset{
    tag "${baseName(id)}"
    storeDir "${outputdir}"
 
+
    input:
    path script
    tuple val(id), path(tfr_batch)
@@ -33,7 +34,7 @@ process create_197K_dataset{
 
 
 
-workflow enformer_human {
+workflow enformer_prep197 {
   take:
   script197
   input_tfr

@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-print("Hello, I am starting!")
 import gzip
 import kipoiseq
 from kipoiseq import Interval
@@ -16,58 +14,31 @@ import tensorflow as tf
 import importlib
 import copy
 
+myDir = os.getcwd()
+sys.path.append(myDir)
 
 # ------------------------------------------------------
 # -----------------      Load files      ------------
 # ------------------------------------------------------
 
-# import utils.py as module
-file_path = os.path.dirname(os.path.realpath(__file__))
-spec_utils = importlib.util.spec_from_file_location("utils", os.path.join(file_path ,"utils/utils_full.py"))
-utils = importlib.util.module_from_spec(spec_utils)
-spec_utils.loader.exec_module(utils)
-from utils import *
-from utils.utils import *
+dataset_197k_file = sys.argv[1]
+model_path = sys.argv[2]
+outname = sys.argv[3]
+head = sys.argv[4]
+eval = sys.argv[5]
 
 
-
-
-# Load files
-model_path = 'https://tfhub.dev/deepmind/enformer/1'
-datadir = "../../../../data/FED"
-outputdir = os.path.join(datadir, "hd5")
-fasta_file = os.path.join(datadir, "hg38.fa")
-human_sequences = os.path.join(datadir, "data_human_sequences.bed")
-pyfaidx.Faidx(fasta_file)
-logfile = os.path.join(outputdir, "log_full.txt")
+from utils_full import *
 # Get pre-trained model
-model = utils.Enformer(model_path)
+model = Enformer(model_path)
+print("1 -- Model loaded")
 
-print("Model loaded")
-
-spec_utils = importlib.util.spec_from_file_location("attention_module", os.path.join(file_path ,"utils/attention_module.py"))
-attention_module = importlib.util.module_from_spec(spec_utils)
-spec_utils.loader.exec_module(attention_module)
-from utils.attention_module import *
+from enformer import *
 
 
+with open(dataset_197k_file, 'rb') as file:
+    dataset_197k = pickle.load(file)
 
-spec_utils = importlib.util.spec_from_file_location("enformer", os.path.join(file_path ,"utils/enformer.py"))
-enformer = importlib.util.module_from_spec(spec_utils)
-spec_utils.loader.exec_module(enformer)
-from utils.enformer import *
-
-
-# ------------------------------------------------------
-# -----------------      Extract fasta      ------------
-# ------------------------------------------------------
-fasta_extractor = utils.FastaStringExtractor(fasta_file)
-print("fasta file extracted")
-
-# Load previous validation dictionary
-dataset_197k_file = os.path.join(outputdir,'test_197k_200.h5')
-with open(dataset_197k_file, 'rb') as config_dictionary_file:
-    dataset_197k = pickle.load(config_dictionary_file)
 
 
 
@@ -81,13 +52,7 @@ def pad_one_hot(sequence_one_hot, NEW_SIZE):
     return(pad_sequence)
 
 
-dataset_197k_evaluation = []
-
 def evaluate_model_all_sequences_mod(model, dataset, head, dataset_197k_evaluation, max_steps=None):
-
-    metric = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
-    with open(logfile, "a") as file_object:
-        file_object.write("beginning")
 
     # Given a tensor with a one-encoded sequence, predicts head tracks
     def predict(x):
@@ -95,97 +60,50 @@ def evaluate_model_all_sequences_mod(model, dataset, head, dataset_197k_evaluati
         predictions = model.predict_on_batch(padded_sequence)[head]
         return tf.convert_to_tensor(predictions, dtype=tf.float32)
 
-    for i in range(len(dataset_197k)):
+    for i in range(len(dataset)):
         if max_steps is not None and i > max_steps:
             break
 
-        batch = dataset_197k[i]
+        batch = dataset[i]
         prediction = predict(batch['sequence'])
-        metric.update_state(batch['target'][np.newaxis], prediction)
-        # Compute it on a sequence basis
-        with open(logfile, "a") as file_object:
-            file_object.write("Done with prediction")
-            file_object.write("\n")
+        with open('log.txt', 'a') as f:
+            f.write(str(i))
 
-        metric_seq = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
-        metric_seq.update_state(batch['target'][np.newaxis], prediction)
-        pearson_seq = metric_seq.result()["PearsonR"].numpy()
-        batch_validation = {"sequence": batch["sequence"],
-                            "target": batch["target"],
-                            "interval": batch["interval"],
-                            "PearsonR": pearson_seq}
+        if(eval == "eval"):
+            metric_seq = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
+            metric_seq.update_state(batch['target'][np.newaxis], prediction)
+            pearson_seq = metric_seq.result()["PearsonR"].numpy()
+            batch_validation = {"sequence": batch["sequence"],
+                                        "target": batch["target"],
+                                        "interval": batch["interval"],
+                                        "prediction": prediction,
+                                        "PearsonR": pearson_seq}
+        else:
+            batch_validation = {"sequence": batch["sequence"],
+                                                "target": batch["target"],
+                                                "prediction": prediction,
+                                                "interval": batch["interval"]
+                                                }
+
+
+
         dataset_197k_evaluation.append(batch_validation)
 
-        with open(logfile, "a") as file_object:
-            file_object.write("finished")
-            file_object.write(str(i))
-            file_object.write("\n")
-            file_object.write("-------------")
-            file_object.write("\n")
+    return dataset_197k_evaluation
 
-    return list([metric.result(), dataset_197k_evaluation])
-
-max_steps = 50
+dataset_197k_evaluation = []
 metrics_human = evaluate_model_all_sequences_mod(model,
                                dataset=dataset_197k,
-                               head='human',
-                               dataset_197k_evaluation = dataset_197k_evaluation,
-                               max_steps=max_steps)
-
-summarized_metrics = metrics_human[0]
-dataset_197k_evaluation = metrics_human[1]
+                               head=head,
+                               dataset_197k_evaluation = dataset_197k_evaluation)
 
 
 
-file_summarized_metrics = os.path.join(outputdir,'checks.h5')
-with open(file_summarized_metrics, 'wb') as config_dictionary_file:
-    pickle.dump("aaa", config_dictionary_file)
+dataset_197k_evaluation = metrics_human
 
-# ------------------------------------------------------
-# -----------------     Save                ------------
-# ------------------------------------------------------
-
-file_summarized_metrics = os.path.join(outputdir,'summarized_metrics_50.h5')
-with open(file_summarized_metrics, 'wb') as config_dictionary_file:
-    pickle.dump(summarized_metrics, config_dictionary_file)
-
-file_dataset_197k_evaluation = os.path.join(outputdir,'dataset_197k_evaluation_50.h5')
-with open(file_dataset_197k_evaluation, 'wb') as config_dictionary_file:
-    pickle.dump(dataset_197k_evaluation, config_dictionary_file)
-
-
-
-
-# ------------------------------------------------------
-# -------------     Prep evaluation df      ------------
-# ------------------------------------------------------
-file = os.path.join(outputdir,'suppl_df.h5')
-with open(file, 'rb') as config_dictionary_file:
-    suppl_df = pickle.load(config_dictionary_file)
-
-ordered_assays = suppl_df[suppl_df["organism"] == "human"]["assay_type"]
-
-def get_sequence_evaluation_df(i,dataset_197k_evaluation, ordered_assays ):
-    # Create dataframe for plotting
-    df = pd.DataFrame()
-    # Add sequence
-    df["sequence"] = np.repeat(1,len(ordered_assays))
-    # Add assay
-    df["assay"] = ordered_assays
-    # Add pearson values
-    df["pearson"] = (dataset_197k_evaluation[i]["PearsonR"])
-    return(df)
-
-
-final_df = pd.DataFrame()
-r = len(dataset_197k_evaluation)
-r = max_steps
-for i in range(r):
-    df = get_sequence_evaluation_df(i,dataset_197k_evaluation, ordered_assays)
-    print(i)
-    final_df = pd.concat([final_df, df])
-
-
-file_df = os.path.join(outputdir,'evaluation_df_50.h5')
-with open(file_df, 'wb') as config_dictionary_file:
-    pickle.dump(final_df, config_dictionary_file)
+print("Pred and evaluation done")
+print(outname)
+# Save
+with open(outname, 'wb') as file:
+    pickle.dump(dataset_197k_evaluation, file)
+print("Saved")

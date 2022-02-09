@@ -2,8 +2,6 @@
 #$ -N prep_dataset_197k
 #$ -cwd
 #$ -q short-sl7
-#$ -M luisa.santus@crg.eu
-#$ -m abe
 #$ -o ./out/$JOB_NAME-$JOB_ID.out
 #$ -e ./err/$JOB_NAME-$JOB_ID.err
 #$ -l virtual_free=20G,disk=300G
