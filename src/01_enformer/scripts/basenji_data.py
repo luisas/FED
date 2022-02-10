@@ -70,14 +70,14 @@ def main():
       help='Genome assembly gaps BED [Default: %default]')
   parser.add_option('-i', dest='interp_nan',
       default=False, action='store_true',
-      help='Interpolate NaNs [Default: %default]')
+      help='Interpolate NaNs [Default: %default]') 
   parser.add_option('-l', dest='seq_length',
       default=131072, type='int',
       help='Sequence length [Default: %default]')
   parser.add_option('--limit', dest='limit_bed',
       help='Limit to segments that overlap regions in a BED file')
   parser.add_option('--local', dest='run_local',
-      default=True, action='store_true',
+      default=False, action='store_true',
       help='Run jobs locally as opposed to on SLURM [Default: %default]')
   parser.add_option('-o', dest='out_dir',
       default='data_out',
@@ -87,7 +87,7 @@ def main():
       help='Number parallel processes [Default: %default]')
   parser.add_option('--peaks', dest='peaks_only',
       default=False, action='store_true',
-      help='Create contigs only from peaks [Default: %default]')
+      help='Create contigs only from peaks [Default: %default]') 
   parser.add_option('-r', dest='seqs_per_tfr',
       default=256, type='int',
       help='Sequences per TFRecord file [Default: %default]')
@@ -159,9 +159,9 @@ def main():
 
   # check snap
   if options.snap is not None:
-    if np.mod(options.seq_length, options.snap) != 0:
+    if np.mod(options.seq_length, options.snap) != 0: 
       raise ValueError('seq_length must be a multiple of snap')
-    if np.mod(options.stride_train, options.snap) != 0:
+    if np.mod(options.stride_train, options.snap) != 0: 
       raise ValueError('stride_train must be a multiple of snap')
     if np.mod(options.stride_test, options.snap) != 0:
       raise ValueError('stride_test must be a multiple of snap')
@@ -175,9 +175,7 @@ def main():
 
   # read target datasets
   targets_df = pd.read_csv(targets_file, index_col=0, sep='\t')
-  print("Targets dataset read")
-  print(targets_file)
-  print(targets_df)
+
   ################################################################
   # define genomic contigs
   ################################################################
@@ -340,18 +338,16 @@ def main():
       else:
         fi = int(a[3].replace('fold',''))
       fold_mseqs[fi].append(msg)
-
+        
   ################################################################
   # read sequence coverage values
   ################################################################
   seqs_cov_dir = '%s/seqs_cov' % options.out_dir
-  print(seqs_cov_dir)
-
   if not os.path.isdir(seqs_cov_dir):
     os.mkdir(seqs_cov_dir)
 
   read_jobs = []
-  print(targets_df)
+
   for ti in range(targets_df.shape[0]):
     genome_cov_file = targets_df['file'].iloc[ti]
     seqs_cov_stem = '%s/%d' % (seqs_cov_dir, ti)
@@ -388,12 +384,11 @@ def main():
       cmd += ' %s' % genome_cov_file
       cmd += ' %s' % seqs_bed_file
       cmd += ' %s' % seqs_cov_file
-      print(cmd)
+
       if options.run_local:
         # breaks on some OS
         # cmd += ' &> %s.err' % seqs_cov_stem
         read_jobs.append(cmd)
-
       else:
         j = slurm.Job(cmd,
             name='read_t%d' % ti,
@@ -408,8 +403,6 @@ def main():
     slurm.multi_run(read_jobs, options.processes, verbose=True,
                     launch_sleep=1, update_sleep=5)
 
-
-  exit()
   ################################################################
   # write TF Records
   ################################################################
@@ -435,7 +428,7 @@ def main():
     while tfr_start <= fold_set_end:
       tfr_stem = '%s/%s-%d' % (tfr_dir, fold_set, tfr_i)
 
-      cmd = './basenji_data_write.py'
+      cmd = 'basenji_data_write.py'
       cmd += ' -s %d' % tfr_start
       cmd += ' -e %d' % tfr_end
       cmd += ' --umap_clip %f' % options.umap_clip
@@ -626,7 +619,7 @@ def contig_sequences(contigs, seq_length, stride, snap=1, label=None):
       # update
       seq_start += stride
       seq_end += stride
-
+      
   return mseqs
 
 
@@ -648,7 +641,7 @@ def curate_peaks(targets_df, out_dir, pool_width, crop_bp):
       chrm = a[0]
       start = int(a[1])
       end = int(a[2])
-
+      
       # extend to pool width
       length = end - start
       if length < pool_width:
