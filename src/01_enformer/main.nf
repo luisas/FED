@@ -22,6 +22,9 @@ Channel.fromPath("${params.scripts}/01_create_197k_dataset.py").collect().set{py
 Channel.fromPath("${params.scripts}/02_pred_eval.py").collect().set{py_pred_script}
 Channel.fromPath("${params.scripts}/02b_prep_df.py").collect().set{prep_df_script}
 Channel.fromPath("${params.scripts}/01b_split_list.py").collect().set{split_script}
+Channel.fromPath("${params.scripts}/02c_prep_df_cross.py").collect().set{cross_script}
+
+
 // Model
 Channel.fromPath("${params.input_dir}/enformer/1").collect().set{model}
 params.bin="${baseDir}/bin"
@@ -52,6 +55,15 @@ params.output_dir="${params.input_dir}/enformer/${params.head_train}/${params.he
 Channel.fromPath("${params.input_dir}/basenji/${params.head_pred}/targets.csv").collect().set{targets}
 
 
+// -- Evalutation
+params.evaluation_tracks = "cerebellum"
+Channel.fromPath("${params.output_dir}/${params.evaluation_tracks}/train_tracks.csv").collect().set{tracks_train}
+Channel.fromPath("${params.output_dir}/${params.evaluation_tracks}/pred_tracks.csv").collect().set{tracks_pred}
+params.output_dir_eval = "${params.output_dir}/${params.evaluation_tracks}"
+
+
+
+
 workflow {
 
 
@@ -71,7 +83,11 @@ workflow {
 										25)
 
 	else
-		predict_wf(py_pred_script, split_script, enformer_prep197.out.tfrecords_197_emit , model, "${params.output_dir}", bin, "${params.head_pred}", "false", 25)
+		predict_wf(py_pred_script, split_script,cross_script,
+			  			 enformer_prep197.out.tfrecords_197_emit ,
+							 model, "${params.output_dir}", bin,
+							 "${params.head_pred}", "false", 25,
+							 tracks_train, tracks_pred,"${params.output_dir_eval}" )
 
 
 

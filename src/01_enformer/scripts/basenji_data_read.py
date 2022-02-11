@@ -311,7 +311,7 @@ class CovFace:
       cov = self.cov_open.values(chrm, start, end, numpy=True).astype('float16')
       print("read method")
       print(chrm)
-      print(self.cov_open[6])
+      print(self.cov_open)
 
     else:
       if chrm in self.cov_open:

@@ -72,6 +72,28 @@ process summary_df{
 }
 
 
+process summary_df_cross{
+   tag "${baseName(pickle_batch.toString())}"
+   storeDir "${outputdir}/dfs"
+
+   input:
+   path script
+   path pickle_batch
+   path tracks_train
+   path tracks_pred
+   val outputdir
+
+
+   output:
+   path "${baseName(pickle_batch.toString())}_df.csv", emit: eval
+
+   script:
+   """
+   python3 ${script} ${pickle_batch} ${tracks_train} ${tracks_pred} "${baseName(pickle_batch.toString())}_df.csv"
+   """
+}
+
+
 process mergeCSV {
   storeDir "${outputdir}/"
 
@@ -104,6 +126,7 @@ workflow predict_eval_wf {
   chunk_size
 
 
+
   main:
   split_list(split_script, input_pickle, chunk_size, outputdir)
   split_list.out.chunks.flatten().set{ list_chunks }
@@ -122,6 +145,7 @@ workflow predict_wf {
   take:
   script197
   split_script
+  script_eval_cross
   input_pickle
   model
   outputdir
@@ -129,12 +153,16 @@ workflow predict_wf {
   head
   eval_flag
   chunk_size
-
+  tracks_train
+  tracks_pred
+  output_dir_eval
 
   main:
   split_list(split_script, input_pickle, chunk_size, outputdir)
   split_list.out.chunks.flatten().set{ list_chunks }
 	predict_eval(script197, list_chunks, model, outputdir, bin, head, eval_flag )
+  summary_df_cross(script_eval_cross, predict_eval.out.preds, tracks_train, tracks_pred, output_dir_eval)
+  mergeCSV(summary_df_cross.out.eval.collect(), output_dir_eval)
 
   emit:
   pred_eval_emit = predict_eval.out.preds
