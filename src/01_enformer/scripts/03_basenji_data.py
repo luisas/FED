@@ -12,6 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Example
+#  python3 03_basenji_data.py /home/luisasantus/Desktop/crg_cluster/data/FED/assemblies/bosTaurus/bosTaurus_chrClean.fa /home/luisasantus/Desktop/crg_cluster/data/FED/basenji/bosTaurus/cer_bos_wigs.txt -l 196608 -o /home/luisasantus/Desktop/crg_cluster/data/FED/basenji/bosTaurus/basenji -c 40960
 # =========================================================================
 from __future__ import print_function
 
@@ -372,7 +374,7 @@ def main():
     if options.restart and os.path.isfile(seqs_cov_file):
       print('Skipping existing %s' % seqs_cov_file, file=sys.stderr)
     else:
-      cmd = 'basenji_data_read.py'
+      cmd = './basenji_data_read.py'
       # cmd += ' --crop %d' % options.crop_bp
       cmd += ' -w %d' % options.pool_width
       cmd += ' -u %s' % targets_df['sum_stat'].iloc[ti]
@@ -408,8 +410,6 @@ def main():
     slurm.multi_run(read_jobs, options.processes, verbose=True,
                     launch_sleep=1, update_sleep=5)
 
-
-  exit()
   ################################################################
   # write TF Records
   ################################################################

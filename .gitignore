@@ -1,0 +1,11 @@
+core.*
+src/00_clusterCRG/err/*
+src/00_clusterCRG/out/*
+src/00_clusterCRG/work/*
+01_enformer/work/*
+.nextflow*
+01_enformer/utils/__pycache__/*.pyc
+core*
+src/01_enformer/work/*
+src/01_enformer/scripts/data_out/*
+*.pyc

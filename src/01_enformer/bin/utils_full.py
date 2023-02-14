@@ -317,10 +317,98 @@ class MetricDict:
     def result(self):
         return {k: metric.result() for k, metric in self._metrics.items()}
 
-
-
-
-
-
 def one_hot_encode(sequence):
     return kipoiseq.transforms.functional.one_hot_dna(sequence).astype(np.float32)
+
+
+# ------------ addition
+
+
+def get_interval_from_sequence(sequence, human_validation_dict=human_validation_dict):
+    for interval, ref_sequence in human_validation_dict.items():
+        if np.allclose(sequence,ref_sequence):
+            return(interval)
+
+def deserialize_mod(serialized_example, metadata):
+    """Deserialize bytes stored in TFRecordFile."""
+    feature_map = {
+          'sequence': tf.io.FixedLenFeature([], tf.string),
+          'target': tf.io.FixedLenFeature([], tf.string),
+          'chr': tf.io.FixedLenFeature([], tf.string),
+    }
+    example = tf.io.parse_example(serialized_example, feature_map)
+    sequence = tf.io.decode_raw(example['sequence'], tf.bool)
+    sequence = tf.reshape(sequence, (metadata['seq_length'], 4))
+    sequence = tf.cast(sequence, tf.float32)
+
+    target = tf.io.decode_raw(example['target'], tf.float16)
+    target = tf.reshape(target,
+                          (metadata['target_length'], metadata['num_targets']))
+    target = tf.cast(target, tf.float32)
+
+    chrom = tf.io.decode_raw(example['chr'], tf.uint8)
+    chrom = tf.cast(chrom, tf.float32)
+
+
+    return {'sequence': sequence,
+              'target': target,
+              'chr': chrom}
+
+def get_dataset_mod(tfs, metadata):
+    dataset = tf.data.TFRecordDataset(tfs, compression_type= "ZLIB")
+    dataset = dataset.map(functools.partial(deserialize_mod, metadata=metadata))
+    return dataset
+
+def get_metadata_mod(path):
+    with tf.io.gfile.GFile(path, 'r') as f:
+        return json.load(f)
+
+
+
+## pad the sequence with Ns (anyways ignored by the model)
+def pad_one_hot(sequence_one_hot, NEW_SIZE):
+    ADD_ENDS = int((NEW_SIZE - sequence_one_hot.shape[0])/2)
+    pad_zero = np.tile(np.array([0., 0., 0., 0.]), (ADD_ENDS, 1))
+    padded_left = np.append(pad_zero,sequence_one_hot, axis=0)
+    pad_sequence = np.append(padded_left,pad_zero, axis=0)
+    return(pad_sequence)
+
+
+def evaluate_model_all_sequences_mod(model, dataset, head, eval = "no", SEQUENCE_LENGHT = 393_216, max_steps=None):
+
+    dataset_out = []
+    # Given a tensor with a one-encoded sequence, predicts head tracks
+    def predict(x):
+        padded_sequence = pad_one_hot(x.numpy(), SEQUENCE_LENGHT)[np.newaxis]
+        predictions = model.predict_on_batch(padded_sequence)[head]
+        return tf.convert_to_tensor(predictions, dtype=tf.float32)
+
+    for i, batch in tqdm(enumerate(dataset)):
+        if max_steps is not None and i > max_steps:
+            break
+
+        prediction = predict(batch['sequence'])
+        with open('log.txt', 'a') as f:
+            f.write(str(i))
+
+        if(eval == "eval"):
+            metric_seq = MetricDict({'PearsonR': PearsonR(reduce_axis=(0,1))})
+            metric_seq.update_state(batch['target'][np.newaxis], prediction)
+            pearson_seq = metric_seq.result()["PearsonR"].numpy()
+            batch_validation = {"sequence": batch["sequence"],
+                                        "target": batch["target"],
+                                        "interval": batch["interval"],
+                                        "prediction": prediction,
+                                        "PearsonR": pearson_seq}
+        else:
+            batch_validation = {"sequence": batch["sequence"],
+                                                "target": batch["target"],
+                                                "prediction": prediction,
+                                                "chr": batch["chr"]
+                                                }
+
+
+
+        dataset_out.append(batch_validation)
+
+    return dataset_out

@@ -160,7 +160,8 @@ def main():
       # hash to bytes
       features_dict = {
         'sequence': feature_bytes(seq_1hot),
-        'target': feature_bytes(targets[si,:,:])
+        'target': feature_bytes(targets[si,:,:]),
+        'chr': _bytes_feature(mseq.chr.encode('utf-8'))
         }
 
       # add unmappability
@@ -207,7 +208,11 @@ def feature_floats(values):
      Requires more space than bytes."""
   values = values.flatten().tolist()
   return tf.train.Feature(float_list=tf.train.FloatList(value=values))
-
+def _bytes_feature(value):
+  """Returns a bytes_list from a string / byte."""
+  if isinstance(value, type(tf.constant(0))):
+    value = value.numpy() # BytesList won't unpack a string from an EagerTensor.
+  return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 ################################################################################
 # __main__

@@ -112,24 +112,24 @@ def main():
     mseq = model_seqs[si]
 
     # read coverage
-    print(mseq.chr)
-    print(mseq.start)
-    print(mseq.end)
+    #print(mseq.chr)
+    #print(mseq.start)
+    #print(mseq.end)
 
     # Extract region from bw
     seq_cov_nt = genome_cov_open.read(mseq.chr, mseq.start, mseq.end)
-    print("reading")
-    print(seq_cov_nt)
+    #print("reading")
+    #print(seq_cov_nt)
 
     # interpolate NaN
     if options.interp_nan:
       seq_cov_nt = interp_nan(seq_cov_nt)
-      print(sum(seq_cov_nt))
+      #print(sum(seq_cov_nt))
     # determine baseline coverage
     if target_length >= 8:
       baseline_cov = np.percentile(seq_cov_nt, 100*options.blacklist_pct)
       baseline_cov = np.nan_to_num(baseline_cov)
-      print(baseline_cov)
+      #print(baseline_cov)
     else:
       baseline_cov = 0
 
@@ -152,8 +152,8 @@ def main():
     if options.crop_bp > 0:
       seq_cov_nt = seq_cov_nt[options.crop_bp:-options.crop_bp]
 
-    print("seq_cov_nt")
-    print((seq_cov_nt))
+    #print("seq_cov_nt")
+    #print((seq_cov_nt))
     # sum pool
     seq_cov = seq_cov_nt.reshape(target_length, options.pool_width)
     if options.sum_stat == 'sum':
@@ -184,13 +184,10 @@ def main():
 
     # scale
     seq_cov = options.scale * seq_cov
-    print("Seq cov")
-    print(seq_cov)
-    print()
+    #print("Seq cov")
+    #print(seq_cov)
     # save
     targets.append(seq_cov.astype('float16'))
-    print(targets)
-    break
 
     # write
     # seqs_cov_open['targets'][si,:] = seq_cov.astype('float16')
@@ -309,9 +306,9 @@ class CovFace:
   def read(self, chrm, start, end):
     if self.bigwig:
       cov = self.cov_open.values(chrm, start, end, numpy=True).astype('float16')
-      print("read method")
-      print(chrm)
-      print(self.cov_open)
+      #print("read method")
+      #print(chrm)
+      #print(self.cov_open)
 
     else:
       if chrm in self.cov_open:
