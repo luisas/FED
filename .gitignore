@@ -10,3 +10,4 @@ src/01_enformer/work/*
 src/01_enformer/scripts/data_out/*
 **/*.pyc
 **/.*checkpoint*
+**/.pth
