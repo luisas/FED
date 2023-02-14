@@ -1,0 +1,17 @@
+      sequence                                              assay   pearson
+0            0                                DNase/B6D2F1;J 416B  0.458855
+1            0                                DNase/BALB;cAnN A20  0.585223
+2            0          DNase/C57BL;6 B cell male adult (8 weeks)  0.418413
+3            0  DNase/C57BL;6 splenic B cell male adult (8 weeks)  0.382523
+4            0      DNase/C57BL;6 cerebellum male adult (8 weeks)  0.388053
+...        ...                                                ...       ...
+1638         2  CAGE/natural helper cells, naive, biol_, tech_...  0.218013
+1639         2  CAGE/natural helper cells, IL33 treated, day02...  0.741136
+1640         2     CAGE/natural helper cells, naive, biol_, tech_  0.360205
+1641         2  CAGE/natural helper cells, IL2 treated, day15,...  0.661662
+1642         2  CAGE/natural helper cells, naive, biol_, tech_...  0.379128
+
+[4929 rows x 3 columns]
+Saved
+cp: ‘.command.out’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/26/c1c9ed473b0ee121e0940a1ba23618/.command.out’ are the same file
+cp: ‘.command.err’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/26/c1c9ed473b0ee121e0940a1ba23618/.command.err’ are the same file

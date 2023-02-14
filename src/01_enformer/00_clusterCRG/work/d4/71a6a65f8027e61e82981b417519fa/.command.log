@@ -1,0 +1,4 @@
+2022-02-08 10:37:42.202592: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 10:37:42.386272: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700000000 Hz
+cp: ‘.command.out’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/d4/71a6a65f8027e61e82981b417519fa/.command.out’ are the same file
+cp: ‘.command.err’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/d4/71a6a65f8027e61e82981b417519fa/.command.err’ are the same file

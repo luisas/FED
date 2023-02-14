@@ -1,0 +1,24 @@
+2022-02-08 12:10:35.414920: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 12:10:35.595023: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700005000 Hz
+Traceback (most recent call last):
+  File "02_pred_eval.py", line 82, in <module>
+    metrics_human = evaluate_model_all_sequences_mod(model,
+  File "02_pred_eval.py", line 71, in evaluate_model_all_sequences_mod
+    metric_seq.update_state(batch['target'][np.newaxis], prediction)
+  File "/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/fe/19701c0b5957c00a96118e18f62451/utils_full.py", line 315, in update_state
+    metric.update_state(y_true, y_pred)
+  File "/usr/local/lib/python3.8/site-packages/tensorflow/python/keras/utils/metrics_utils.py", line 86, in decorated
+    update_op = update_state_fn(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/tensorflow/python/keras/metrics.py", line 177, in update_state_fn
+    return ag_update_state(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/tensorflow/python/autograph/impl/api.py", line 695, in wrapper
+    raise e.ag_error_metadata.to_exception(e)
+ValueError: in user code:
+
+    /nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/fe/19701c0b5957c00a96118e18f62451/utils_full.py:222 update_state  *
+        y_true.shape.assert_is_compatible_with(y_pred.shape)
+    /usr/local/lib/python3.8/site-packages/tensorflow/python/framework/tensor_shape.py:1161 assert_is_compatible_with  **
+        raise ValueError("Shapes %s and %s are incompatible" % (self, other))
+
+    ValueError: Shapes (1, 896, 5313) and (1, 896, 1643) are incompatible
+

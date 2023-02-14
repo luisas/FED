@@ -1,0 +1,1 @@
+/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/9c/4b99d6f7d07e6881b340dece3ed69a/.command.sh: line 2: 26611 Killed                  python 02_pred_eval.py valid-0-6_197k.pkl 1 "valid-0-6_197k_pred.pkl" human

@@ -1,0 +1,70 @@
+2022-02-08 09:36:25.788700: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 09:36:26.014528: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700005000 Hz
+1 -- Model loaded
+{'sequence': <tf.Tensor: shape=(1, 196608, 4), dtype=float32, numpy=
+array([[[1., 0., 0., 0.],
+        [0., 0., 1., 0.],
+        [0., 0., 0., 1.],
+        ...,
+        [0., 0., 0., 1.],
+        [1., 0., 0., 0.],
+        [1., 0., 0., 0.]]], dtype=float32)>, 'target': <tf.Tensor: shape=(896, 5313), dtype=float32, numpy=
+array([[0.0000000e+00, 2.5234222e-03, 0.0000000e+00, ..., 0.0000000e+00,
+        0.0000000e+00, 0.0000000e+00],
+       [7.7056885e-03, 7.9498291e-03, 0.0000000e+00, ..., 0.0000000e+00,
+        0.0000000e+00, 0.0000000e+00],
+       [5.8197021e-02, 1.2245178e-02, 0.0000000e+00, ..., 9.6130371e-02,
+        9.0380859e-01, 0.0000000e+00],
+       ...,
+       [2.0160675e-03, 1.8371582e-02, 3.5400391e-03, ..., 0.0000000e+00,
+        0.0000000e+00, 0.0000000e+00],
+       [2.0389557e-03, 1.3504028e-02, 4.1198730e-02, ..., 0.0000000e+00,
+        0.0000000e+00, 0.0000000e+00],
+       [2.0278931e-02, 0.0000000e+00, 3.2186508e-04, ..., 0.0000000e+00,
+        0.0000000e+00, 0.0000000e+00]], dtype=float32)>, 'interval': Interval(chrom='chrX', start=16174772, end=16305844, name='', strand='.', ...)}
+{'sequence': <tf.Tensor: shape=(1, 196608, 4), dtype=float32, numpy=
+array([[[1., 0., 0., 0.],
+        [1., 0., 0., 0.],
+        [1., 0., 0., 0.],
+        ...,
+        [0., 1., 0., 0.],
+        [0., 1., 0., 0.],
+        [0., 0., 0., 1.]]], dtype=float32)>, 'target': <tf.Tensor: shape=(896, 5313), dtype=float32, numpy=
+array([[0.0043602 , 0.        , 0.        , ..., 0.        , 0.        ,
+        0.        ],
+       [0.00084496, 0.        , 0.        , ..., 0.        , 0.        ,
+        0.        ],
+       [0.00675964, 0.        , 0.        , ..., 0.        , 0.        ,
+        0.        ],
+       ...,
+       [0.07727051, 0.03848267, 0.02961731, ..., 0.07946777, 0.16455078,
+        0.1340332 ],
+       [0.0302887 , 0.05227661, 0.0186615 , ..., 0.        , 0.81933594,
+        0.        ],
+       [0.02532959, 0.01405334, 0.00772476, ..., 0.        , 0.14233398,
+        0.22802734]], dtype=float32)>, 'interval': Interval(chrom='chrX', start=24088313, end=24219385, name='', strand='.', ...)}
+{'sequence': <tf.Tensor: shape=(1, 196608, 4), dtype=float32, numpy=
+array([[[0., 0., 0., 1.],
+        [1., 0., 0., 0.],
+        [0., 0., 1., 0.],
+        ...,
+        [0., 1., 0., 0.],
+        [0., 1., 0., 0.],
+        [0., 1., 0., 0.]]], dtype=float32)>, 'target': <tf.Tensor: shape=(896, 5313), dtype=float32, numpy=
+array([[0.02124023, 0.02326965, 0.01737976, ..., 0.        , 0.        ,
+        0.        ],
+       [0.0597229 , 0.03707886, 0.04086304, ..., 0.        , 0.09619141,
+        0.        ],
+       [0.01140594, 0.00560379, 0.01577759, ..., 0.        , 0.        ,
+        0.47753906],
+       ...,
+       [0.0619812 , 0.1418457 , 0.06213379, ..., 0.        , 0.98095703,
+        0.        ],
+       [0.09088135, 0.19641113, 0.01673889, ..., 0.        , 0.        ,
+        0.        ],
+       [0.11334229, 0.20837402, 0.07336426, ..., 0.        , 0.        ,
+        0.        ]], dtype=float32)>, 'interval': Interval(chrom='chr13', start=97255639, end=97386711, name='', strand='.', ...)}
+Pred and evaluation done
+Saved
+cp: ‘.command.out’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/71/bbdb369f8e341e1decfc59c4473753/.command.out’ are the same file
+cp: ‘.command.err’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/71/bbdb369f8e341e1decfc59c4473753/.command.err’ are the same file

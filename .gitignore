@@ -8,4 +8,5 @@ src/00_clusterCRG/work/*
 core*
 src/01_enformer/work/*
 src/01_enformer/scripts/data_out/*
-*.pyc
+**/*.pyc
+**/.*checkpoint*

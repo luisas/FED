@@ -1,0 +1,15 @@
+      sequence                                              assay   pearson
+0            0  DNase/cerebellum male adult (27 years) and mal...  0.908884
+1            0  DNase/frontal cortex male adult (27 years) and...  0.864643
+2            0                                      DNase/chorion  0.799596
+3            0  DNase/Ishikawa treated with 0.02% dimethyl sul...  0.864542
+4            0                                      DNase/GM03348  0.907159
+...        ...                                                ...       ...
+5308         2        CAGE/epithelioid sarcoma cell line:HS-ES-2R  0.951239
+5309         2  CAGE/squamous cell lung carcinoma cell line:RE... -0.003244
+5310         2                  CAGE/gastric cancer cell line:GSS -0.003437
+5311         2                  CAGE/carcinoid cell line:NCI-H727 -0.004433
+5312         2  CAGE/lung adenocarcinoma, papillary cell line:...  0.945959
+
+[15939 rows x 3 columns]
+Saved

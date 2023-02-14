@@ -1,0 +1,7 @@
+2022-02-08 10:37:33.727222: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 39321600 exceeds 10% of free system memory.
+2022-02-08 10:37:33.848864: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 65286144 exceeds 10% of free system memory.
+2022-02-08 10:37:51.534536: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 10:37:51.779624: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2699905000 Hz
+2022-02-08 10:37:53.911725: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:37:55.109863: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:37:55.810538: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.

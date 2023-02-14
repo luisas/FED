@@ -1,0 +1,2 @@
+2022-02-08 09:51:17.186274: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 09:51:17.356213: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700085000 Hz

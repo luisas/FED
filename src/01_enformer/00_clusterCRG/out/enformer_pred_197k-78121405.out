@@ -1,0 +1,62 @@
+N E X T F L O W  ~  version 21.10.6
+Launching `/users/cn/lsantus/projects/FED/src/01_enformer/main.nf` [golden_shockley] - revision: aa24f7f546
+Emformer via NF
+=====================================
+
+[-        ] process > enformer_prep197:create_197... -
+[-        ] process > predict_eval_wf:predict_eval   -
+[-        ] process > predict_eval_wf:summary_df     -
+
+[skipped  ] process > enformer_prep197:create_197... [100%] 9 of 9, stored: 9 ✔
+[-        ] process > predict_eval_wf:predict_eval   [  0%] 0 of 1
+[-        ] process > predict_eval_wf:summary_df     -
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-0)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-6)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-3)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-2)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-8)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-5)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-7)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-1)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-4)
+
+[skipped  ] process > enformer_prep197:create_197... [100%] 9 of 9, stored: 9 ✔
+[-        ] process > predict_eval_wf:predict_eval   [  0%] 0 of 6
+[-        ] process > predict_eval_wf:summary_df     -
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-0)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-6)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-3)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-2)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-8)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-5)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-7)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-1)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-4)
+
+executor >  local (1)
+[skipped  ] process > enformer_prep197:create_197... [100%] 9 of 9, stored: 9 ✔
+[aa/b328c3] process > predict_eval_wf:predict_eva... [  0%] 0 of 9
+[-        ] process > predict_eval_wf:summary_df     -
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-0)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-6)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-3)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-2)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-8)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-5)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-7)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-1)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-4)
+
+executor >  local (1)
+[skipped  ] process > enformer_prep197:create_197... [100%] 9 of 9, stored: 9 ✔
+[aa/b328c3] process > predict_eval_wf:predict_eva... [  0%] 0 of 9
+[-        ] process > predict_eval_wf:summary_df     -
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-0)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-6)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-3)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-2)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-8)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-5)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-7)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-1)
+[skipping] Stored process > enformer_prep197:create_197K_dataset (valid-0-4)

@@ -1,0 +1,13 @@
+2022-02-08 10:36:57.153845: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2022-02-08 10:36:57.345586: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700075000 Hz
+2022-02-08 10:36:58.529403: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:36:59.276986: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:36:59.758668: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:37:00.562294: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+2022-02-08 10:37:05.740643: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
+Traceback (most recent call last):
+  File "02_pred_eval.py", line 82, in <module>
+    metrics_human = evaluate_model_all_sequences_mod(model,
+  File "02_pred_eval.py", line 69, in evaluate_model_all_sequences_mod
+    f.write(i)
+TypeError: write() argument must be str, not int
