@@ -6,7 +6,6 @@ nextflow.enable.dsl = 2
 
 include { CREATE_TEST; } from './workflows/test.nf'
 
-
 workflow {
     CREATE_TEST()
 }

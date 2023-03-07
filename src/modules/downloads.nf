@@ -2,22 +2,25 @@
 
 process DOWNLOAD_FROM_METADATA_SHEET{
 
-    storeDir "${params.outdir}/downloads"
+    storeDir "${params.outdir}/downloads/${organism}/${assay}/${biosample}/"
+    tag("${assay}-${organism}-${biosample}-${id}")
 
     input:
-    file metadata_sheet
+    tuple val(assay), val(organism), val(file_format), val(output_type), val(biosample), val(id), val(link)
 
     output:
-    path("*"), emit: downloads
+    tuple val(assay), val(organism), val(file_format), val(output_type), val(biosample), val(id), file("${id}*")
 
     script:
     """
-    cut -f 1,48 ${metadata_sheet} | tail -n +2 | while read id track; do
-        echo \$id
-        echo \$track
-        wget -O \$track
-    done
+    if [[ ${link} =~ \.gz\$ ]]; then
+        wget ${link} 
+        gunzip *.gz
+    else
+        wget ${link}
+    fi
     """
+
 }
 
 

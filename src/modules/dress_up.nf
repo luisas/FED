@@ -6,18 +6,17 @@ process ENRICH_BINARY{
     storeDir "${params.enrichment}"
 
     input:
-    file chunks
-    file track
+    tuple file(chunks), val(assay), val(organism), val(file_format), val(output_type), val(biosample), val(id), file(track)
     val min_overlap
 
     output:
-    path("${chunks.baseName}_${min_overlap}_overlap_binary.txt"), emit: bed
+    path("${chunks.baseName}_${track.baseName}_${min_overlap}_overlap_binary.txt"), emit: bed
 
     script:
     """
     bedtools intersect -a ${chunks} -b ${track} -f ${params.binary_intersection_min} -c  > ${chunks.baseName}_overlap.txt
     # Extract the ID of the chunk if overlaps or not 
-    awk '{if(\$NF>0) print \$5"\t1"; else print \$5"\t0"}' ${chunks.baseName}_overlap.txt > ${chunks.baseName}_${min_overlap}_overlap_binary.txt
+    awk '{if(\$NF>0) print \$5"\t1"; else print \$5"\t0"}' ${chunks.baseName}_overlap.txt > ${chunks.baseName}_${track.baseName}_${min_overlap}_overlap_binary.txt
     """
 }
 

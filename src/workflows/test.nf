@@ -1,10 +1,12 @@
 
 include {DOWNLOAD_FROM_METADATA_SHEET;} from "../modules/downloads.nf"
-include {EXTRACT_FROM_BED;} from "../modules/preprocessing.nf"
-include {ENRICH; } from "../subworkflows/enrich.nf"
+include {EXTRACT_FROM_BED; MERGE_BEDS; } from "../modules/preprocessing.nf"
+include {RUN_ENRICHMENT_ANALYSIS; } from "../subworkflows/enrichment_analysis.nf"
+include {SEQ_SIMILARITY; } from "../subworkflows/sequence_similarity.nf"
+
 
 metadata_download = Channel.fromPath( params.metadata_sheet, checkIfExists: true )
-//assembly = Channel.fromPath( params.assembly, checkIfExists: true ) 
+assembly = Channel.fromPath( params.assembly, checkIfExists: true ).map{it -> [it.parent.name, it]} 
 test_genes = Channel.fromPath( params.test_genes, checkIfExists: true )
 //annotation_gtf = Channel.fromPath( params.annotation_gtf, checkIfExists: true )
 annotation_bed = Channel.fromPath( params.annotation_bed, checkIfExists: true )
@@ -12,22 +14,31 @@ annotation_bed = Channel.fromPath( params.annotation_bed, checkIfExists: true )
 
 track_bed = Channel.fromPath( params.track_bed, checkIfExists: true )
 
+
+
+metadata = Channel.fromPath(params.metadata_sheet).splitCsv(header : true)
+                     .map { row -> ["${row["assay_title"]}",
+                                     "${row["Organism"]}",
+                                     "${row["file_format"]}", 
+                                     "${row["output_type"]}", 
+                                     "${row["Biosample term name"]}",
+                                     "${row["File accession"]}",
+                                     "${row["link"]}"] }
+
 // Do I w want to first call the peaks or first subselect the genes? 
 workflow CREATE_TEST{
     
-      // Prepare data
-      //DOWNLOAD_FROM_METADATA_SHEET( metadata_download )
-      // GTF_TO_BED( annotation_gtf ) todo     
+      // Prepare the bed file with the test genes
+      selected_chunks = EXTRACT_FROM_BED( test_genes, annotation_bed)
 
-      EXTRACT_FROM_BED( test_genes, annotation_bed)
-      selected_chunks = EXTRACT_FROM_BED.out.bed      
+      // Downloand tracks
+      samples = DOWNLOAD_FROM_METADATA_SHEET( metadata )
+      
+      // Run the enrichment analysis
+      RUN_ENRICHMENT_ANALYSIS(samples, selected_chunks)
 
-      // map the track information on the test genes
-      ENRICH( selected_chunks, track_bed, params.enrich_mode)
-      // ID, YES/NO
+      // compute sequence similarity 
+      // SEQ_SIMILARITY( selected_chunks.combine(assembly) )
 
-
-      // Then after here you need to analyze 
-      // Q1: for all the gene groups, check the concordance of the enrichment results 
 
 }

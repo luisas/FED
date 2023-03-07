@@ -11,3 +11,6 @@ src/01_enformer/scripts/data_out/*
 **/*.pyc
 **/.*checkpoint*
 **/.pth
+src/02_sei/*
+src/work/*
+env/*
