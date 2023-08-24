@@ -3,7 +3,7 @@
 process ENRICH_BINARY{
     
     container "luisas/bedtools"
-    storeDir "${params.enrichment}"
+    storeDir "${params.enrichment}/"
 
     input:
     tuple file(chunks), val(assay), val(organism), val(file_format), val(output_type), val(biosample), val(id), file(track)
@@ -28,8 +28,7 @@ process ENRICH_CONTINUOUS{
     storeDir "${params.enrichment}"
 
     input:
-    file bed
-    file track_bed
+    tuple file(chunks), val(assay), val(organism), val(file_format), val(output_type), val(biosample), val(id), file(track)
 
     output:
     path("*.bed"), emit: bed

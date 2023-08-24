@@ -8,11 +8,7 @@ include {SEQ_SIMILARITY; } from "../subworkflows/sequence_similarity.nf"
 metadata_download = Channel.fromPath( params.metadata_sheet, checkIfExists: true )
 assembly = Channel.fromPath( params.assembly, checkIfExists: true ).map{it -> [it.parent.name, it]} 
 test_genes = Channel.fromPath( params.test_genes, checkIfExists: true )
-//annotation_gtf = Channel.fromPath( params.annotation_gtf, checkIfExists: true )
 annotation_bed = Channel.fromPath( params.annotation_bed, checkIfExists: true )
-
-
-track_bed = Channel.fromPath( params.track_bed, checkIfExists: true )
 
 
 
@@ -25,6 +21,9 @@ metadata = Channel.fromPath(params.metadata_sheet).splitCsv(header : true)
                                      "${row["File accession"]}",
                                      "${row["link"]}"] }
 
+
+//metadata = metadata.filter{ it[2] == "bed"}
+
 // Do I w want to first call the peaks or first subselect the genes? 
 workflow CREATE_TEST{
     
@@ -36,9 +35,5 @@ workflow CREATE_TEST{
       
       // Run the enrichment analysis
       RUN_ENRICHMENT_ANALYSIS(samples, selected_chunks)
-
-      // compute sequence similarity 
-      // SEQ_SIMILARITY( selected_chunks.combine(assembly) )
-
 
 }

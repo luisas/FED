@@ -1,18 +1,15 @@
 
 
 include {FASTA_FROM_BED} from "../modules/preprocessing.nf"
-
+include {SIMILARITY} from "../modules/alignment_utils.nf"
 
 workflow SEQ_SIMILARITY{
     take: 
-        selected_chunks
-        assembly
+        chunks_and_assembly
 
     main: 
-        // 1. Extract FA sequences 
-        FASTA_FROM_BED( selected_chunks, assembly)
-        // 2. pairwise alignment 
-        // get all pairs 
-        // compute the pairwise alignment
-        // chec
+        // 1. Extract FA sequences
+        FASTA_FROM_BED( chunks_and_assembly )
+        // 2. Pairwise alignment 
+        SIMILARITY( FASTA_FROM_BED.out.fasta )
 }

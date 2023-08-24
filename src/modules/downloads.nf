@@ -13,7 +13,7 @@ process DOWNLOAD_FROM_METADATA_SHEET{
 
     script:
     """
-    if [[ ${link} =~ \.gz\$ ]]; then
+    if [[ ${link} == *.gz ]]; then
         wget ${link} 
         gunzip *.gz
     else

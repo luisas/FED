@@ -41,7 +41,6 @@ process MERGE_BEDS{
 }
 
 
-
 process FASTA_FROM_BED{
     
     container "luisas/bedtools"
