@@ -1,1 +1,0 @@
-/nfs/users/cn/lsantus/data/FED/basenji/human/tfrecords_197k/valid-0-6_197k.pkl

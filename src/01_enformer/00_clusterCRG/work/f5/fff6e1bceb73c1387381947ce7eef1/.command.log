@@ -1,9 +1,0 @@
-2022-02-08 10:46:52.399301: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
-2022-02-08 10:46:52.638976: I tensorflow/core/platform/profile_utils/cpu_utils.cc:114] CPU Frequency: 2700115000 Hz
-2022-02-08 10:46:54.372280: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
-2022-02-08 10:46:55.168218: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
-2022-02-08 10:46:55.679121: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
-2022-02-08 10:46:56.556721: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
-2022-02-08 10:47:02.386450: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 603979776 exceeds 10% of free system memory.
-cp: ‘.command.out’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/f5/fff6e1bceb73c1387381947ce7eef1/.command.out’ are the same file
-cp: ‘.command.err’ and ‘/nfs/users/cn/lsantus/projects/FED/src/00_clusterCRG/work/f5/fff6e1bceb73c1387381947ce7eef1/.command.err’ are the same file

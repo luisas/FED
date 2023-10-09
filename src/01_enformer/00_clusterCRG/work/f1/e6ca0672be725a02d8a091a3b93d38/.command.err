@@ -1,4 +1,0 @@
-  File "02_pred_eval.py", line 72
-    if(eval == "eval"){
-                      ^
-SyntaxError: invalid syntax
