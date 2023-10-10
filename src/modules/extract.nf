@@ -1,6 +1,6 @@
 
 
-process ENRICH_BINARY{
+process EXTRACT_BED{
     
     container "luisas/bedtools"
     storeDir "${params.enrichment}/"
@@ -20,9 +20,27 @@ process ENRICH_BINARY{
     """
 }
 
+// Given a list of IDs and the reference bed file, extract the corresponding regions and save in BED file
+process EXTRACT_ID_FROM_BED {
 
+    container "luisas/bedtools"
+    storeDir "${params.gene_lists}"
+    label "small"
 
-process ENRICH_CONTINUOUS{
+    input:
+    file test_genes
+    file annotation_bed
+
+    output:
+    path("*.bed"), emit: bed
+
+    script:
+    """
+    extract_ids_from_bed.py ${test_genes} ${annotation_bed} ${test_genes.baseName}.bed
+    """
+}
+
+process EXTRACT_BIGWIG{
 
     container "luisas/bedtools"
     storeDir "${params.enrichment}"
@@ -37,5 +55,6 @@ process ENRICH_CONTINUOUS{
     """
     # extract the whole bigWig from the bed file 
     echo "Not implemented yet"
+	 # use https://github.com/CRG-Barcelona/bwtool/wiki/extract ?
     """
 }
